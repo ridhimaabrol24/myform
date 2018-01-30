@@ -1,0 +1,203 @@
+<?php
+function myentity_entity_info(){
+  $myentity_info['myentity'] = array(
+    'label' => t('My entity'),
+    'controller class' => 'MyentityController',
+    'base table' => 'myentity',
+    'uri callback' => 'myentity_uri',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'myid',
+    ),
+    'static cache' => TRUE,
+    'bundles' => array(
+      'myentity'=> array(
+        'label' => 'myentity',
+        'admin' => array(
+          'path' => 'admin/structure/myentity/manage',
+          'access arguments' => array('administer my entities'),
+        ),
+      ),
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => t('Full entity'),
+        'custom settings' =>  FALSE,
+      ),
+    )
+  );
+
+  return $myentity_info;
+}
+
+function myentity_uri($myentity){
+  return array(
+    'path' => 'myentity/' . $myentity->id,
+  );
+}
+
+function myentity_load($myid = NULL, $reset = FALSE){
+  $myids = (isset ($myid) ? array($myid) : array());
+  $myentity = myentity_load_multiple($myids, $reset);
+  return $myentity ? reset ($myentity) : FALSE;
+}
+
+function myentity_load_multiple($myids = array(), $conditions = array(), $reset = FALSE){
+  return entity_load('myentity', $myids, $conditions, $reset);
+}
+
+function myentity_menu(){
+  $items['admin/structure/myentity/manage'] = array(
+    'title' => 'My Entity Admin',
+    'description' => 'Manage my entity structure',
+    'page callback' => 'myentity_info',
+    'access arguments' => array('administer myentity'),
+  );
+  $items['myentity/%myentity'] = array(
+    'title callback' => 'myentity_page_title',
+    'title arguments' => array(1),
+    'page callback' => 'myentity_page_view',
+    'page arguments' => array(1),
+    'access arguments' => array('view myentity'),
+    'type' => MENU_CALLBACK,
+  );
+  $items['myentity/add'] = array(
+    'title' => 'Add myentity!',
+    'page callback' => 'myentity_add',
+    'access arguments' => array('create myentity'),
+  );
+  return $items;
+}
+
+function myentity_permission(){
+    return array(
+    'administer myentity' =>  array(
+      'title' => t('Administer myentity'),
+      'restrict access' => TRUE,
+    ),
+    'view myentity' => array(
+      'title' => t('View my entity'),
+    )
+  );
+}
+
+
+function myentity_info() {
+  return ('Welcome to the administration page for your entity!');
+}
+
+function myentity_page_title($myentity){
+  return $myentity->myid;
+}
+
+function myentity_page_view($myentity, $view_mode = 'full'){
+  $myentity->content = array();
+  // die;
+  // Build fields content.
+  field_attach_prepare_view('myentity', array($myentity->myid => $myentity), $view_mode);
+  $test = entity_prepare_view('myentity', array($myentity->myid => $myentity));
+  krumo($test);die;
+  $myentity->content += field_attach_view('myentity', $myentity, $view_mode);
+  krumo($myentity->content);
+  die;
+  return $myentity->content;
+}
+
+
+// function myentity_field_extra_fields() {
+//   $return = array();
+//   $return['myentity']['myentity'] = array(
+//     'form' => array(
+//       'note' => array(
+//         'label' => t('Note'),
+//         'description' => t('myentity Note'),
+//       ),
+//     ),
+//   );
+//
+//   return $return;
+// }
+
+function myentity_add() {
+  $myentity = (object) array (
+    'myid' => '',
+    'type' => 'myentity',
+    // 'note' => '',
+  );
+
+  return drupal_get_form('myentity_add_form', $myentity);
+}
+
+
+function myentity_add_form($form, &$form_state, $myentity) {
+  $form['student_name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Student Name'),
+    '#required' => TRUE,
+  );
+  $form['student_rollno'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Student Roll No'),
+    '#required' => TRUE,
+  );
+  $form['student_email'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Student email'),
+    '#required' => TRUE,
+  );
+  $form['student_password'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Student Password'),
+    '#required' => TRUE,
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  field_attach_form('myentity', $myentity, $form, $form_state);
+
+
+  return $form;
+
+}
+
+function myentity_add_form_validate($form, &$form_state) {
+  $myentity_submission = (object) $form_state['values'];
+  field_attach_form_validate('myentity', $myentity_submission, $form, $form_state);
+}
+
+function myentity_add_form_submit($form, &$form_state) {
+  $query = db_insert('myentity')
+  ->fields(array(
+          'student_name' => $form_state['values']['student_name'],
+          'student_rollno' => $form_state['values']['student_rollno'],
+          'student_email' => $form_state['values']['student_email'],
+          'student_password' => $form_state['values']['student_password'],
+
+        )
+      )
+       ->execute();
+      //  $form['field_your_field']['#parents'] = array('field_your_field');
+      //  form_set_value($form['field_your_field'], array('und' => array(0 => array('value' => 'WORKS'))), $form_state);
+
+  // $entity = entity_ui_form_submit_build_entity($form, $form_state);
+  //     $entity->save();
+  //     drupal_set_message(t("submission done"));
+  //     $form_state['redirect'] = 'admin/blogsite/myentity/add';
+  //
+
+  // $myentity_submission = (object) $form_state['values'];
+  // field_attach_submit('myentity', $myentity_submission, $form, $form_state);
+  // $myentity = myentity_save($myentity_submission);
+  // $form_state['redirect'] = "myentity/$myentity->myid";
+  // print_r($form_state);
+  // die;
+}
+
+function myentity_save(&$myentity) {
+  die;
+  return entity_get_controller('myentity')->save($myentity);
+}
+ ?>
