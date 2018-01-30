@@ -1,5 +1,6 @@
 <?php
 function myentity_entity_info(){
+
   $myentity_info['myentity'] = array(
     'label' => t('My entity'),
     'controller class' => 'MyentityController',
@@ -90,16 +91,12 @@ function myentity_page_title($myentity){
   return $myentity->myid;
 }
 
-function myentity_page_view($myentity, $view_mode = 'full'){
+function myentity_page_view($myentity, $view_mode = 'full') {
+
   $myentity->content = array();
-  // die;
   // Build fields content.
   field_attach_prepare_view('myentity', array($myentity->myid => $myentity), $view_mode);
-  $test = entity_prepare_view('myentity', array($myentity->myid => $myentity));
-  krumo($test);die;
   $myentity->content += field_attach_view('myentity', $myentity, $view_mode);
-  krumo($myentity->content);
-  die;
   return $myentity->content;
 }
 
@@ -169,35 +166,14 @@ function myentity_add_form_validate($form, &$form_state) {
 }
 
 function myentity_add_form_submit($form, &$form_state) {
-  $query = db_insert('myentity')
-  ->fields(array(
-          'student_name' => $form_state['values']['student_name'],
-          'student_rollno' => $form_state['values']['student_rollno'],
-          'student_email' => $form_state['values']['student_email'],
-          'student_password' => $form_state['values']['student_password'],
 
-        )
-      )
-       ->execute();
-      //  $form['field_your_field']['#parents'] = array('field_your_field');
-      //  form_set_value($form['field_your_field'], array('und' => array(0 => array('value' => 'WORKS'))), $form_state);
-
-  // $entity = entity_ui_form_submit_build_entity($form, $form_state);
-  //     $entity->save();
-  //     drupal_set_message(t("submission done"));
-  //     $form_state['redirect'] = 'admin/blogsite/myentity/add';
-  //
-
-  // $myentity_submission = (object) $form_state['values'];
-  // field_attach_submit('myentity', $myentity_submission, $form, $form_state);
-  // $myentity = myentity_save($myentity_submission);
-  // $form_state['redirect'] = "myentity/$myentity->myid";
-  // print_r($form_state);
-  // die;
+    $postit_submission = (object) $form_state['values'];
+    field_attach_submit('myentity', $postit_submission, $form, $form_state);
+    $myentity = myentity_save($postit_submission);
+    $form_state['redirect'] = "myentity/$myentity->myid";
 }
 
 function myentity_save(&$myentity) {
-  die;
   return entity_get_controller('myentity')->save($myentity);
 }
  ?>
