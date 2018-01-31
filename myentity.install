@@ -1,39 +1,17 @@
 <?php
+ function myentity_schema(){
 
-function myentity_schema() {
-
-  $schema['myentity'] = array(
-    'description' => 'The base table for custom forms.',
-    'fields' => array(
-      'myid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'student_name' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'student_rollno' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-      ),
-      'student_email' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-      'student_password' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('myid'),
-  );
-
-
-  return $schema;
-}
-?>
+   $schema['myentity'] = array(
+     'description' => 'The base table for custom forms.',
+     'fields' => array(
+       'myid' => array(
+         'type' => 'serial',
+         'unsigned' => TRUE,
+         'not null' => TRUE,
+       ),
+     ),
+     'primary key' => array('myid'),
+   );
+   return $schema;
+ }
+ ?>

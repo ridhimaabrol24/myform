@@ -49,7 +49,7 @@ function myentity_load_multiple($myids = array(), $conditions = array(), $reset 
 
 function myentity_menu(){
   $items['admin/structure/myentity/manage'] = array(
-    'title' => 'My Entity Admin',
+    'title' => 'My Entity',
     'description' => 'Manage my entity structure',
     'page callback' => 'myentity_info',
     'access arguments' => array('administer myentity'),
@@ -127,26 +127,6 @@ function myentity_add() {
 
 
 function myentity_add_form($form, &$form_state, $myentity) {
-  $form['student_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Student Name'),
-    '#required' => TRUE,
-  );
-  $form['student_rollno'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Student Roll No'),
-    '#required' => TRUE,
-  );
-  $form['student_email'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Student email'),
-    '#required' => TRUE,
-  );
-  $form['student_password'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Student Password'),
-    '#required' => TRUE,
-  );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -154,7 +134,6 @@ function myentity_add_form($form, &$form_state, $myentity) {
   );
 
   field_attach_form('myentity', $myentity, $form, $form_state);
-
 
   return $form;
 
